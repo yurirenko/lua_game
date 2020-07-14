@@ -1,6 +1,7 @@
 Object = require 'lib/classic/classic'
 Input = require 'lib/boipushy/Input'
 Timer = require 'lib/hump/timer'
+M = require 'lib/moses/moses'
 require 'src/excercise/libs/health_bar'
 local require_all = require 'src/util/loader'
 
