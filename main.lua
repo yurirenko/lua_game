@@ -1,6 +1,5 @@
 Object = require 'lib/classic/classic'
 Input = require 'lib/boipushy/Input'
--- Timer = require 'lib/enhanced_timer/EnhancedTimer'
 Timer = require 'lib/hump/timer'
 require 'src/excercise/libs/health_bar'
 local require_all = require 'src/util/loader'
@@ -30,30 +29,49 @@ function love.load()
 
     health_bar = HealthBar(10)
 
+    -- Shrinking cross 
     -- timer:tween(1, rectangle1, {w = 0}, 'in-out-cubic', function ()
     --   timer:tween(1, rectangle2, {h = 0}, 'in-out-cubic', function () 
     --     timer:tween(2, rectangle1, {w = 50}, 'in-out-cubic')
     --     timer:tween(2, rectangle2, {h = 50}, 'in-out-cubic')
     --   end)
     -- end)
-    -- timer:tween(6, hc, {radius = 120}, 'in-out-cubic', function ()
-    --   timer:tween(6, hc, {radius = 50}, 'in-out-cubic')
+
+    -- Periodic behavior:
+    -- Blinking light
+    -- timer:after(0, function (f)
+    --   timer:tween(6, hc, {radius = 120 - 10}, 'in-out-cubic', function ()
+    --     timer:tween(6, hc, {radius = 50}, 'in-out-cubic', function ()
+    --       timer:after(0, f)
+    --     end)
+    --   end)
     -- end)
 
     -- for i = 1, 10 do
     --   timer:after(0.5 + (i / 2), function () print(love.timer.getTime() .. ': ' .. love.math.random()) end)
     -- end
     input:bind('d', 'damage')
+    input:bind('e', 'expand')
+    input:bind('s', 'shrink')
     -- input:bind('-', 'add')
 end
 
 function love.update(dt)
   timer:update(dt)
   health_bar:update(dt)
+  hc:update(dt)
 
   fps = 1.0/dt
   if input:pressed('damage') then
     health_bar:damage(1.5 * love.math.random())
+  end
+
+  if input:pressed('expand') then
+    hc:expand(8)
+  end
+
+  if input:pressed('shrink') then
+    hc:shrink(8)
   end
   -- if input:pressed('test') then
   --   print('pressed')
@@ -64,10 +82,10 @@ function love.update(dt)
 end
 
 function love.draw()
-  -- hc:draw()
+  hc:draw()
   -- rectangle1:draw()
   -- rectangle2:draw()
-  health_bar:draw()
+  -- health_bar:draw()
 
   love.graphics.print(fps, 0, 0)
 end
