@@ -1,4 +1,5 @@
 local Object = require('lib.classic.classic')
+local Timer = require 'lib/hump/timer'
 local UUID = require('lib.uuid.uuid')
 
 local GameObject = Object:extend()

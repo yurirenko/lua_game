@@ -1,3 +1,5 @@
+local Object = require('lib.classic.classic')
+
 local Room = Object:extend()
 
 function Room:new()

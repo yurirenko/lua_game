@@ -1,10 +1,6 @@
-Object = require 'lib/classic/classic'
-Input = require 'lib/boipushy/Input'
-Timer = require 'lib/hump/timer'
-M = require 'lib/moses/moses'
-UUID = require 'lib/uuid/uuid'
+local Input = require 'lib/boipushy/Input'
+local Timer = require 'lib/hump/timer'
 local Stage = require('src.game.stage')
-require 'src/excercise/libs/health_bar'
 
 
 local fps = nil

@@ -1,3 +1,5 @@
+local Object = require('lib.classic.classic')
+
 Rectangle = Object:extend()
 
 function Rectangle:new(x, y, w, h)
