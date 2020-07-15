@@ -1,6 +1,7 @@
-Timer = require 'lib/hump/timer'
+local Timer = require('lib.hump.timer')
+local Object = require('lib.classic.classic')
 
-Circle = Object:extend()
+local Circle = Object:extend()
 
 function Circle:new(x, y, radius)
   self.x = x
@@ -16,13 +17,18 @@ function Circle:update(dt)
   self.timer:update(dt)
 end
 
-function Circle:expand(radius_dt)
+function Circle:expand(radius_dt, expansion_time)
   if self.radius_change_handle ~= nil then
     self.timer:cancel(self.radius_change_handle)
   end
 
   local new_radius = self.radius + radius_dt
-  self.radius_change_handle = self.timer:tween(0.8, self, {radius = new_radius}, 'in-out-quart')
+  self.radius_change_handle = self.timer:tween(
+    expansion_time,
+    self,
+    {radius = new_radius},
+    'in-out-quart'
+  )
 end
 
 function Circle:shrink(radius_dt)
@@ -38,3 +44,5 @@ function Circle:draw()
   love.graphics.setColor(255, 255, 255)
   love.graphics.circle('fill', self.x, self.y, self.radius)
 end
+
+return Circle
