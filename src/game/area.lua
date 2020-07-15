@@ -1,4 +1,5 @@
-local Object = require 'lib/classic/classic'
+local Object = require('lib.classic.classic')
+local M = require('lib.moses.moses')
 
 local Area = Object:extend()
 
@@ -11,6 +12,10 @@ function Area:addGameObject(game_object)
   table.insert(self.game_objects, game_object)
 
   return game_object
+end
+
+function Area:getGameObjects(predicate)
+  return M.filter(self.game_objects, predicate)
 end
 
 function Area:update(dt)
