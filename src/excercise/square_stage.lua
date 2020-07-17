@@ -1,7 +1,5 @@
-local M = require('lib.moses.moses')
 local Stage = require('src.game.stage')
 local Rectangle = require('src.game.objects.rectangle')
-local inspect = require('lib.inspect.inspect')
 
 local SquareStage = Stage:extend()
 

@@ -13,6 +13,6 @@ return {
   end,
   print_all = function (anything, max_depth)
     max_depth = max_depth or 5
-    inspect(anything, {depth = max_depth, process = remove_all_metatables})
+    print(inspect(anything, {depth = max_depth, process = remove_all_metatables}))
   end
 }
