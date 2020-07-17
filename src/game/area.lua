@@ -22,6 +22,30 @@ function Area:getRandomObject()
   return self.game_objects[love.math.random(#self.game_objects)]
 end
 
+function Area:queryCircleArea(x, y, radius, types)
+  local in_circle = false
+  types = types or {}
+
+  return self:getGameObjects(function (v)
+    in_circle = ((v.x - x) ^ 2) + ((v.y - y) ^ 2) < radius * radius
+    if not in_circle then
+      return false
+    end
+
+    if #types == 0 then
+      return true
+    end
+
+    for _, type in pairs(types) do
+      if v:is(type) then
+        return true
+      end
+    end
+
+    return false
+  end)
+end
+
 function Area:update(dt)
   for i = #self.game_objects, 1, -1 do
     local game_object = self.game_objects[i]
@@ -34,7 +58,7 @@ function Area:update(dt)
 end
 
 function Area:draw()
-  for i, game_object in pairs(self.game_objects) do
+  for _, game_object in pairs(self.game_objects) do
     game_object:draw()
   end
 end
