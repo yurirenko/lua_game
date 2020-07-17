@@ -18,6 +18,10 @@ function Area:getGameObjects(predicate)
   return M.filter(self.game_objects, predicate)
 end
 
+function Area:getRandomObject()
+  return self.game_objects[love.math.random(#self.game_objects)]
+end
+
 function Area:update(dt)
   for i = #self.game_objects, 1, -1 do
     local game_object = self.game_objects[i]
@@ -30,7 +34,7 @@ function Area:update(dt)
 end
 
 function Area:draw()
-  for _, game_object in ipairs(self.game_objects) do
+  for i, game_object in pairs(self.game_objects) do
     game_object:draw()
   end
 end

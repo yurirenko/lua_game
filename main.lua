@@ -1,7 +1,10 @@
 local Input = require('lib/boipushy/Input')
 local Timer = require('lib/hump/timer')
-local Stage = require('src.game.stage')
 local Debug = require('src.game.debug')
+local SquareStage = require('src.excercise.square_stage')
+
+local SCREEN_WIDTH = 800
+local SCREEN_HEIGHT = 600
 
 local fps = nil
 local memory_usage = 0
@@ -13,13 +16,16 @@ local input = nil
 local show_debug_info = false
 
 function love.load()
-    love.window.setMode(800, 600)
-    current_room = Stage()
+    love.window.setMode(SCREEN_WIDTH, SCREEN_HEIGHT)
+    current_room = SquareStage(10, SCREEN_WIDTH, SCREEN_HEIGHT)
 
     input = Input()
     timer = Timer()
 
+    current_room:createRectangles()
+
     input:bind('`', function () show_debug_info = not show_debug_info end)
+    input:bind('d', 'delete_rectangle')
 end
 
 local frames_counter = 0
@@ -33,6 +39,14 @@ function love.update(dt)
   if frames_counter > 60 then
     memory_usage = collectgarbage('count')
     frames_counter = 0
+  end
+
+  if current_room:getObjectsCount() <= 0 then
+    current_room:createRectangles()
+  end
+
+  if input:pressed('delete_rectangle') then
+    current_room:deleteRandomRectangle()
   end
 end
 

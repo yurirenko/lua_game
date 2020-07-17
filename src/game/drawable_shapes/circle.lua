@@ -3,11 +3,12 @@ local Object = require('lib.classic.classic')
 
 local Circle = Object:extend()
 
-function Circle:new(x, y, radius)
+function Circle:new(x, y, radius, draw_mode)
   self.x = x
   self.y = y
   self.radius = radius
   self.creation_time = love.timer.getTime()
+  self.draw_mode = draw_mode or 'fill'
 
   self.timer = Timer()
   self.radius_change_handle = nil
@@ -42,7 +43,7 @@ end
 
 function Circle:draw()
   love.graphics.setColor(255, 255, 255)
-  love.graphics.circle('fill', self.x, self.y, self.radius)
+  love.graphics.circle(self.draw_mode, self.x, self.y, self.radius)
 end
 
 return Circle
