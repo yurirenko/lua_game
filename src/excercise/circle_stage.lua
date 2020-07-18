@@ -1,5 +1,7 @@
 local Stage = require('src.game.stage')
 local Circle = require('src.game.objects.circle')
+local Rectangle = require('src.game.objects.rectangle')
+local Debug = require('src.game.debug')
 
 local CircleStage = Stage:extend()
 
@@ -15,6 +17,17 @@ function CircleStage:new(max_count, max_x, max_y)
 end
 
 function CircleStage:createCircles()
+  -- for _ = 1, self.max_count, 1 do
+  --   local r = Rectangle(
+  --     self.area,
+  --     love.math.random(0, self.max_x),
+  --     love.math.random(0, self.max_y),
+  --     love.math.random(0, 2),
+  --     love.math.random(0, 3)
+  --   )
+  --   self.area:addGameObject(r)
+  -- end
+
   for i = 1, self.max_count, 1 do
     self.timer:after(CREATION_PERIOD * i, function ()
       self.area:addGameObject(Circle(
@@ -36,6 +49,15 @@ function CircleStage:createCircles()
         return
       end
 
+      local toDestroy = self.area:getClosestObject(self.max_x / 2, self.max_y / 2, 120, {Rectangle})
+
+      if toDestroy ~= nil then
+        toDestroy:kill()
+      end
+      -- for _, v in pairs(toDestroy) do
+      --   v:kill()
+      -- end
+      -- self.area:getRandomObject():kill()
     end)
   end)
 end

@@ -3,30 +3,12 @@ local M = require('lib.moses.moses')
 
 local Area = Object:extend()
 
-function Area:new(room)
-  self.room = room
-  self.game_objects = {}
-end
 
-function Area:addGameObject(game_object)
-  table.insert(self.game_objects, game_object)
-
-  return game_object
-end
-
-function Area:getGameObjects(predicate)
-  return M.filter(self.game_objects, predicate)
-end
-
-function Area:getRandomObject()
-  return self.game_objects[love.math.random(#self.game_objects)]
-end
-
-function Area:queryCircleArea(x, y, radius, types)
+local function inCircleWithTypePredicate(x, y, radius, types)
   local in_circle = false
   types = types or {}
 
-  return self:getGameObjects(function (v)
+  return (function (v)
     in_circle = ((v.x - x) ^ 2) + ((v.y - y) ^ 2) < radius * radius
     if not in_circle then
       return false
@@ -44,6 +26,46 @@ function Area:queryCircleArea(x, y, radius, types)
 
     return false
   end)
+end
+
+function Area:new(room)
+  self.room = room
+  self.game_objects = {}
+end
+
+function Area:addGameObject(game_object)
+  table.insert(self.game_objects, game_object)
+
+  return game_object
+end
+
+function Area:getGameObjects(predicate)
+  return M.filter(self.game_objects, predicate)
+end
+
+function Area:findGameObject(predicate)
+  local index = M.findIndex(self.game_objects, predicate)
+  if index then
+    return self.game_objects[index]
+  else
+    return nil
+  end 
+end
+
+function Area:getRandomObject()
+  return self.game_objects[love.math.random(#self.game_objects)]
+end
+
+function Area:queryCircleArea(x, y, radius, types)
+  types = types or {}
+
+  return self:getGameObjects(inCircleWithTypePredicate(x, y, radius, types))
+end
+
+function Area:getClosestObject(x, y, radius, types)
+  types = types or {}
+
+  return self:findGameObject(inCircleWithTypePredicate(x, y, radius, types))
 end
 
 function Area:update(dt)

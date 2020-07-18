@@ -18,7 +18,7 @@ local show_debug_info = false
 
 function love.load()
     love.window.setMode(SCREEN_WIDTH, SCREEN_HEIGHT)
-    current_room = CircleStage(20, SCREEN_WIDTH, SCREEN_HEIGHT)
+    current_room = CircleStage(10000, SCREEN_WIDTH, SCREEN_HEIGHT)
 
     input = Input()
     timer = Timer()
