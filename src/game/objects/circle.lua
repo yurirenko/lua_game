@@ -3,8 +3,8 @@ local DrawableCircle = require('src.game.drawable_shapes.circle')
 
 local Circle = DrawableGameObject:extend()
 
-function Circle:new(area, x, y, radius)
-  local drawable = DrawableCircle(x, y, radius)
+function Circle:new(area, x, y, radius, draw_mode)
+  local drawable = DrawableCircle(x, y, radius, draw_mode)
 
   Circle.super.new(self, drawable, area, x, y)
 end

@@ -1,11 +1,10 @@
-local Input = require('lib/boipushy/Input')
-local Timer = require('lib/hump/timer')
+local Input = require('lib.boipushy.Input')
+local Timer = require('lib.hump.timer')
 local Debug = require('src.game.debug')
-local SquareStage = require('src.excercise.square_stage')
-local CircleStage = require('src.excercise.circle_stage')
+local Stage = require('src.game.stage')
+require('lib.windfield.windfield')
 
-local SCREEN_WIDTH = 800
-local SCREEN_HEIGHT = 600
+local Camera = require('lib.hump.camera')
 
 local fps = nil
 local memory_usage = 0
@@ -16,27 +15,45 @@ local input = nil
 
 local show_debug_info = false
 
+function resize(s)
+  love.window.setMode(s * BASE_RESOLUTION_W, s * BASE_RESOLUTION_H)
+
+  RESOLUTION_SCALE_X, RESOLUTION_SCALE_Y = s, s
+end
+
+local camera = nil
+
 function love.load()
-    love.window.setMode(SCREEN_WIDTH, SCREEN_HEIGHT)
-    current_room = CircleStage(10000, SCREEN_WIDTH, SCREEN_HEIGHT)
+    resize(2)
+
+    love.graphics.setDefaultFilter('nearest')
+    love.graphics.setLineStyle('rough')
 
     input = Input()
     timer = Timer()
 
-    current_room:createCircles()
+    camera = Camera()
+    current_room = Stage(camera)
+    input:bind('p', function ()
+      camera:shake(4, 60, 1) end
+    )
 
     input:bind('`', function () show_debug_info = not show_debug_info end)
     input:bind('d', 'delete_rectangle')
+
+    input:bind('left', 'left')
+    input:bind('right', 'right')
 end
 
 local frames_counter = 0
 function love.update(dt)
   timer:update(dt)
+  camera:update(dt)
+
+  current_room:update(dt, input)
+
   fps = 1.0/dt
-
-  current_room:update(dt)
   frames_counter = frames_counter + 1
-
   if frames_counter > 60 then
     memory_usage = collectgarbage('count')
     frames_counter = 0

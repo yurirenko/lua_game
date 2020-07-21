@@ -17,24 +17,14 @@ function CircleStage:new(max_count, max_x, max_y)
 end
 
 function CircleStage:createCircles()
-  -- for _ = 1, self.max_count, 1 do
-  --   local r = Rectangle(
-  --     self.area,
-  --     love.math.random(0, self.max_x),
-  --     love.math.random(0, self.max_y),
-  --     love.math.random(0, 2),
-  --     love.math.random(0, 3)
-  --   )
-  --   self.area:addGameObject(r)
-  -- end
-
   for i = 1, self.max_count, 1 do
     self.timer:after(CREATION_PERIOD * i, function ()
       self.area:addGameObject(Circle(
         self.area,
         love.math.random(0, self.max_x),
         love.math.random(0, self.max_y),
-        love.math.random(0, 0.6)
+        love.math.random(0, 60),
+        'line'
       ))
     end)
   end
@@ -54,10 +44,6 @@ function CircleStage:createCircles()
       if toDestroy ~= nil then
         toDestroy:kill()
       end
-      -- for _, v in pairs(toDestroy) do
-      --   v:kill()
-      -- end
-      -- self.area:getRandomObject():kill()
     end)
   end)
 end

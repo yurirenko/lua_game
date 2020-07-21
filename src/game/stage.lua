@@ -1,22 +1,47 @@
-local Room = require('src.game.room')
-local Area = require('src.game.area')
 local Timer = require('lib.hump.timer')
+local Camera = require('lib.hump.camera')
+
+local Area = require('src.game.area')
+local Room = require('src.game.room')
+local Player = require('src.game.player')
 
 local Stage = Room:extend()
 
-function Stage:new()
+function Stage:new(camera)
   self.area = Area(self)
+  self.area:addPhysicsWorld()
+
   self.timer = Timer()
+  self.camera = camera
+
+  self.main_canvas = love.graphics.newCanvas(BASE_RESOLUTION_W, BASE_RESOLUTION_H)
+  self.area:addGameObject(
+    Player(self.area, BASE_RESOLUTION_W / 2, BASE_RESOLUTION_H / 2)
+  )
 end
 
-function Stage:update(dt)
+function Stage:update(dt, input)
+  self.camera.smoother = Camera.smooth.damped(5)
+  self.camera:lockPosition(dt, BASE_RESOLUTION_W / 2, BASE_RESOLUTION_H / 2)
+
   self.timer:update(dt)
-  self.area:update(dt)
+  self.area:update(dt, input)
 end
 
 function Stage:draw()
   if self.area ~= nil then
+    love.graphics.setCanvas(self.main_canvas)
+    love.graphics.clear()
+
+    self.camera:attach(0, 0, BASE_RESOLUTION_W, BASE_RESOLUTION_H)
+    love.graphics.circle('line', BASE_RESOLUTION_W / 2, BASE_RESOLUTION_H / 2, 50)
     self.area:draw()
+    self.camera:detach()
+    love.graphics.setCanvas()
+
+    love.graphics.setBlendMode('alpha', 'premultiplied')
+    love.graphics.draw(self.main_canvas, 0, 0, 0, RESOLUTION_SCALE_X, RESOLUTION_SCALE_Y)
+    love.graphics.setBlendMode('alpha')
   end
 end
 

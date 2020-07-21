@@ -1,8 +1,8 @@
 local Object = require('lib.classic.classic')
+local windfield = require('lib.windfield.windfield')
 local M = require('lib.moses.moses')
 
 local Area = Object:extend()
-
 
 local function inCircleWithTypePredicate(x, y, radius, types)
   local in_circle = false
@@ -39,6 +39,10 @@ function Area:addGameObject(game_object)
   return game_object
 end
 
+function Area:addPhysicsWorld()
+  self.world = windfield.newWorld(0, 0, true)
+end
+
 function Area:getGameObjects(predicate)
   return M.filter(self.game_objects, predicate)
 end
@@ -68,10 +72,14 @@ function Area:getClosestObject(x, y, radius, types)
   return self:findGameObject(inCircleWithTypePredicate(x, y, radius, types))
 end
 
-function Area:update(dt)
+function Area:update(dt, input)
+  if self.world then
+    self.world:update(dt)
+  end
+
   for i = #self.game_objects, 1, -1 do
     local game_object = self.game_objects[i]
-    game_object:update(dt)
+    game_object:update(dt, input)
 
     if game_object.dead then
       table.remove(self.game_objects, i)
@@ -80,6 +88,10 @@ function Area:update(dt)
 end
 
 function Area:draw()
+  if self.world then
+    self.world:draw()
+  end
+
   for _, game_object in pairs(self.game_objects) do
     game_object:draw()
   end
