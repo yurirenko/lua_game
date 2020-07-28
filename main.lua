@@ -15,13 +15,21 @@ local input = nil
 
 local show_debug_info = false
 
-function resize(s)
+local function resize(s)
   love.window.setMode(s * BASE_RESOLUTION_W, s * BASE_RESOLUTION_H)
 
   RESOLUTION_SCALE_X, RESOLUTION_SCALE_Y = s, s
 end
 
 local camera = nil
+
+local function gotoRoom(room)
+  if current_room and current_room.destroy then
+    current_room:destroy()
+  end
+
+  current_room = room
+end
 
 function love.load()
     resize(2)
@@ -41,6 +49,22 @@ function love.load()
     input:bind('`', function () show_debug_info = not show_debug_info end)
     input:bind('d', 'delete_rectangle')
 
+    input:bind('f1', function ()
+      if current_room and current_room.destroy then
+        current_room:destroy()
+        current_room = nil
+      end
+    end)
+
+    input:bind('f2', function ()
+      local new_room = Stage(camera)
+      gotoRoom(new_room)
+    end)
+    input:bind('f3', 'kill_player')
+    input:bind('f4', function ()
+      collectgarbage()
+    end)
+
     input:bind('left', 'left')
     input:bind('right', 'right')
 end
@@ -50,7 +74,9 @@ function love.update(dt)
   timer:update(dt)
   camera:update(dt)
 
-  current_room:update(dt, input)
+  if current_room then
+    current_room:update(dt, input)
+  end
 
   fps = 1.0/dt
   frames_counter = frames_counter + 1
@@ -61,7 +87,9 @@ function love.update(dt)
 end
 
 function love.draw()
-  current_room:draw()
+  if current_room then
+    current_room:draw()
+  end
 
   if show_debug_info then
     Debug.displayInfo(fps, memory_usage)

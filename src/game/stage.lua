@@ -15,7 +15,7 @@ function Stage:new(camera)
   self.camera = camera
 
   self.main_canvas = love.graphics.newCanvas(BASE_RESOLUTION_W, BASE_RESOLUTION_H)
-  self.area:addGameObject(
+  self.player = self.area:addGameObject(
     Player(self.area, BASE_RESOLUTION_W / 2, BASE_RESOLUTION_H / 2)
   )
 end
@@ -23,6 +23,10 @@ end
 function Stage:update(dt, input)
   self.camera.smoother = Camera.smooth.damped(5)
   self.camera:lockPosition(dt, BASE_RESOLUTION_W / 2, BASE_RESOLUTION_H / 2)
+
+  if input:pressed('kill_player') then
+    self.player:kill()
+  end
 
   self.timer:update(dt)
   self.area:update(dt, input)
@@ -47,6 +51,14 @@ end
 
 function Stage:getObjectsCount()
   return #self.area.game_objects
+end
+
+function Stage:destroy()
+  self.area:destroy()
+  self.area = nil
+  self.camera = nil
+  self.timer = nil
+  self.main_canvas = nil
 end
 
 return Stage

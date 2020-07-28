@@ -53,7 +53,7 @@ function Area:findGameObject(predicate)
     return self.game_objects[index]
   else
     return nil
-  end 
+  end
 end
 
 function Area:getRandomObject()
@@ -82,6 +82,7 @@ function Area:update(dt, input)
     game_object:update(dt, input)
 
     if game_object.dead then
+      game_object:destroy()
       table.remove(self.game_objects, i)
     end
   end
@@ -95,6 +96,21 @@ function Area:draw()
   for _, game_object in pairs(self.game_objects) do
     game_object:draw()
   end
+end
+
+function Area:destroy()
+  for i = #self.game_objects, 1, -1 do
+    local game_object = self.game_objects[i]
+    game_object:destroy()
+    table.remove(self.game_objects, i)
+  end
+
+  self.game_objects = {}
+  if self.world then
+    self.world:destroy()
+    self.world = nil
+  end
+  self.room = nil
 end
 
 return Area

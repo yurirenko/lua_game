@@ -20,9 +20,8 @@ function GameObject:new(area, x, y, opts)
 end
 
 function GameObject:update(dt, input)
-  if self.timer then
-    self.timer:update(dt)
-  end
+  self.timer:update(dt)
+
   if self.collider then
     self.x, self.y = self.collider:getPosition()
   end
@@ -33,6 +32,16 @@ end
 
 function GameObject:kill()
   self.dead = true
+end
+
+function GameObject:destroy()
+  if self.collider then
+    self.collider:destroy()
+  end
+  self.timer:clear()
+
+  self.timer = nil
+  self.collider = nil
 end
 
 return GameObject

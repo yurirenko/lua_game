@@ -16,4 +16,10 @@ function DrawableGameObject:update(dt)
   self.drawable:update(dt)
 end
 
+function  DrawableGameObject:destroy()
+  DrawableGameObject.super.destroy(self)
+
+  self.drawable = nil
+end
+
 return DrawableGameObject

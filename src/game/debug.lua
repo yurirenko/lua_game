@@ -1,6 +1,6 @@
 local inspect = require('lib.inspect.inspect')
 
-local remove_all_metatables = function(item, path)
+local function remove_all_metatables(item, path)
   if path[#path] ~= inspect.METATABLE then return item end
 end
 
