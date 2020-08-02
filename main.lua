@@ -67,6 +67,7 @@ function love.load()
 
     input:bind('left', 'left')
     input:bind('right', 'right')
+    input:bind('space', 'shoot')
 end
 
 local frames_counter = 0

@@ -38,7 +38,6 @@ function Stage:draw()
     love.graphics.clear()
 
     self.camera:attach(0, 0, BASE_RESOLUTION_W, BASE_RESOLUTION_H)
-    love.graphics.circle('line', BASE_RESOLUTION_W / 2, BASE_RESOLUTION_H / 2, 50)
     self.area:draw()
     self.camera:detach()
     love.graphics.setCanvas()
